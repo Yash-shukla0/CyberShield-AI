@@ -1,0 +1,8 @@
+Timestamp,URL,Prediction,Confidence
+2026-07-17 16:41:03,https://chatgpt.com/c/6a546c20-03c8-83ee-b6bc-c508352f484f,phishing,86.04
+2026-07-17 16:41:46,https://chatgpt.com/c/6a546c20-03c8-83ee-b6bc-c508352f484f,phishing,86.04000091552734
+2026-07-17 16:49:15,https://chatgpt.com/c/6a546c20-03c8-83ee-b6bc-c508352f484f,benign,99.99
+2026-07-17 17:02:55,https://chatgpt.com/c/6a546c20-03c8-83ee-b6bc-c508352f484f,benign,99.99
+2026-07-17 17:35:02,https://github.com/,benign,99.99
+2026-07-17 17:37:05,http://paypal-account-verify-login.com,phishing,99.9000015258789
+2026-07-17 17:37:54,http://103.15.67.210/install.exe,malware,99.5

@@ -1,4 +1,7 @@
 import streamlit as st
+from pathlib import Path
+import pandas as pd
+
 
 # ---------------------------------------------------------
 # PAGE CONFIGURATION
@@ -143,6 +146,10 @@ Future Versions
         "pages/6_About.py",
         label="ℹ️ About"
     )
+    st.page_link(
+        "pages/7_Explainable_AI.py",
+        label="🧠 Explainable AI"
+    )
 
 # ---------------------------------------------------------
 # HERO SECTION
@@ -155,9 +162,7 @@ st.markdown("""
 
 <p>
 
-Intelligent Cyber Threat Detection using Machine Learning,
-Deep Learning and Explainable AI.
-
+Intelligent Cyber Threat Detection using Machine Learning
 Analyze URLs, detect phishing attacks,
 understand prediction reasoning,
 and visualize cyber threats through
@@ -176,18 +181,24 @@ st.write("")
 
 col1, col2, col3, col4 = st.columns(4)
 
+history_file = Path("history/prediction_history.csv")
+
+if history_file.exists():
+    history = pd.read_csv(history_file)
+    total_predictions = len(history)
+else:
+    total_predictions = 0
+
 with col1:
     st.metric(
         "Threats Detected",
-        "0",
-        "Waiting..."
+        total_predictions
     )
 
 with col2:
     st.metric(
         "Model Accuracy",
-        "--",
-        "Training Pending"
+        "93.35%"
     )
 
 with col3:
@@ -199,7 +210,7 @@ with col3:
 with col4:
     st.metric(
         "Prediction History",
-        "0"
+        total_predictions
     )
 
 st.divider()
@@ -289,7 +300,7 @@ Feature Extraction
 
 ⬇
 
-Machine Learning / Deep Learning Model
+Machine Learning 
 
 ⬇
 
@@ -324,7 +335,6 @@ tasks = [
     "🟡 Exploratory Data Analysis",
     "🟡 Feature Engineering",
     "🟡 Machine Learning Models",
-    "🟡 Deep Learning Models",
     "🟡 Explainable AI",
     "🟡 Streamlit Dashboard",
     "🟡 Deployment"
@@ -353,13 +363,13 @@ tech4.success("XGBoost")
 
 tech5, tech6, tech7, tech8 = st.columns(4)
 
-tech5.success("TensorFlow")
+tech5.success("Pandas")
 
 tech6.success("SHAP")
 
 tech7.success("Plotly")
 
-tech8.success("Pandas")
+tech8.success("Pathlib")
 
 st.divider()
 

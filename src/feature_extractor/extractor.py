@@ -13,6 +13,7 @@ from src.feature_extractor.lexical import LexicalFeatureExtractor
 from src.feature_extractor.domain import DomainFeatureExtractor
 from src.feature_extractor.statistical import StatisticalFeatureExtractor
 
+from urllib.parse import urlparse
 
 class URLFeatureExtractor:
     """
@@ -26,7 +27,12 @@ class URLFeatureExtractor:
 
     def __init__(self, url: str):
 
-        self.url = url.strip()
+        url = url.strip()
+
+        if not url.startswith(("http://", "https://")):
+            url = "http://" + url
+
+        self.url = url
 
     # --------------------------------------------------
     # Dictionary
