@@ -55,16 +55,25 @@ header {visibility:hidden;}
 }
 
 .feature-card{
-    background:#1e293b;
+    background:#1E293B;
     padding:22px;
     border-radius:16px;
-    border:1px solid #334155;
+    border:1px solid #475569;
     min-height:250px;
 }
 
 .feature-card h3{
-    color:#38bdf8;
+    color:#38BDF8;
+    font-size:32px;
+    margin-bottom:20px;
 }
+
+.feature-card p{
+    color:#F8FAFC;
+    font-size:18px;
+    line-height:1.8;
+}
+
 
 .footer{
     text-align:center;

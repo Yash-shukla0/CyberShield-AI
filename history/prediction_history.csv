@@ -6,3 +6,6 @@ Timestamp,URL,Prediction,Confidence
 2026-07-17 17:35:02,https://github.com/,benign,99.99
 2026-07-17 17:37:05,http://paypal-account-verify-login.com,phishing,99.9000015258789
 2026-07-17 17:37:54,http://103.15.67.210/install.exe,malware,99.5
+2026-07-17 17:53:33,https://paypal-userverify.net,phishing,99.9800033569336
+2026-07-17 17:54:03,http://login-google-account.com,phishing,99.87000274658205
+2026-07-17 17:54:41,https://amazon-order-confirm.help,phishing,99.9000015258789
