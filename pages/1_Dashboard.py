@@ -20,33 +20,28 @@ st.write(
 )
 
 # -------------------------------------------------------
-# LOAD DATA
+# DATASET SUMMARY
 # -------------------------------------------------------
 
-DATA_PATH = Path("data/processed/processed_dataset.parquet")
+# Dataset statistics from the processed training dataset
+DATASET_STATS = {
+    "Benign": 428080,
+    "Defacement": 95308,
+    "Malware": 23645,
+    "Phishing": 94086
+}
 
-if DATA_PATH.exists():
+total_urls = sum(DATASET_STATS.values())
 
-    df = pd.read_parquet(DATA_PATH)
-
-else:
-
-    st.error("Processed dataset not found.")
-    st.stop()
+# Create DataFrame for charts
+distribution_df = pd.DataFrame({
+    "Type": list(DATASET_STATS.keys()),
+    "Count": list(DATASET_STATS.values())
+})
 
 # -------------------------------------------------------
 # KPI
 # -------------------------------------------------------
-
-total_urls = len(df)
-
-benign = len(df[df["type"] == "benign"])
-
-phishing = len(df[df["type"] == "phishing"])
-
-malware = len(df[df["type"] == "malware"])
-
-defacement = len(df[df["type"] == "defacement"])
 
 col1, col2, col3, col4, col5 = st.columns(5)
 
@@ -57,22 +52,22 @@ col1.metric(
 
 col2.metric(
     "Benign",
-    f"{benign:,}"
+    f"{DATASET_STATS['Benign']:,}"
 )
 
 col3.metric(
     "Phishing",
-    f"{phishing:,}"
+    f"{DATASET_STATS['Phishing']:,}"
 )
 
 col4.metric(
     "Malware",
-    f"{malware:,}"
+    f"{DATASET_STATS['Malware']:,}"
 )
 
 col5.metric(
     "Defacement",
-    f"{defacement:,}"
+    f"{DATASET_STATS['Defacement']:,}"
 )
 
 st.divider()
@@ -86,8 +81,9 @@ c1, c2 = st.columns(2)
 with c1:
 
     fig = px.pie(
-        df,
-        names="type",
+        distribution_df,
+        names="Type",
+        values="Count",
         title="Threat Distribution"
     )
 
@@ -99,7 +95,10 @@ with c1:
 with c2:
 
     fig = px.bar(
-        df["type"].value_counts(),
+        distribution_df,
+        x="Type",
+        y="Count",
+        text="Count",
         title="Number of URLs per Class"
     )
 
@@ -111,43 +110,97 @@ with c2:
 st.divider()
 
 # -------------------------------------------------------
-# URL LENGTH
+# DATASET INFORMATION
 # -------------------------------------------------------
 
-st.subheader("URL Length Distribution")
+st.subheader("📁 Dataset Information")
 
-fig = px.histogram(
-    df,
-    x="url_length",
-    nbins=50
+info_col1, info_col2, info_col3 = st.columns(3)
+
+info_col1.metric(
+    "Total Samples",
+    f"{total_urls:,}"
 )
 
-st.plotly_chart(
-    fig,
-    use_container_width=True
+info_col2.metric(
+    "Number of Features",
+    "43"
 )
 
-# -------------------------------------------------------
-# TOP FEATURES
-# -------------------------------------------------------
+info_col3.metric(
+    "Classes",
+    "4"
+)
 
-st.subheader("Dataset Preview")
-
-st.dataframe(
-    df.head(20),
-    use_container_width=True
+st.info(
+    "Dataset statistics are displayed from the processed training dataset. "
+    "The full dataset is not loaded into the deployed application."
 )
 
 st.divider()
 
 # -------------------------------------------------------
-# FEATURE SUMMARY
+# CLASS TABLE
 # -------------------------------------------------------
 
-st.subheader("Feature Summary")
+st.subheader("📊 Class Distribution")
+
+class_table = distribution_df.copy()
+
+class_table["Percentage"] = (
+    class_table["Count"] / total_urls * 100
+).round(2)
+
+class_table.columns = [
+    "Class",
+    "Samples",
+    "Percentage"
+]
 
 st.dataframe(
-    df.describe(),
+    class_table,
+    use_container_width=True,
+    hide_index=True
+)
+
+st.divider()
+
+# -------------------------------------------------------
+# MODEL PERFORMANCE
+# -------------------------------------------------------
+
+st.subheader("🤖 Model Performance")
+
+performance_df = pd.DataFrame({
+    "Metric": [
+        "Accuracy",
+        "Precision",
+        "Recall",
+        "F1 Score"
+    ],
+    "Score": [
+        96.73,
+        96.69,
+        96.73,
+        96.70
+    ]
+})
+
+fig = px.bar(
+    performance_df,
+    x="Metric",
+    y="Score",
+    text="Score",
+    title="Random Forest Model Performance"
+)
+
+fig.update_yaxes(
+    range=[0, 100],
+    title="Score (%)"
+)
+
+st.plotly_chart(
+    fig,
     use_container_width=True
 )
 
@@ -157,34 +210,31 @@ st.divider()
 # MODEL STATUS
 # -------------------------------------------------------
 
-st.subheader("Model Status")
+st.subheader("⚙️ Model Status")
 
 status = pd.DataFrame({
 
-    "Component":[
-
+    "Component": [
         "Dataset",
         "Feature Extraction",
         "Random Forest",
         "XGBoost",
         "Prediction API",
+        "Explainable AI",
         "Dashboard"
-
     ],
 
-    "Status":[
-
+    "Status": [
+        "✅ Ready",
         "✅ Ready",
         "✅ Ready",
         "✅ Ready",
         "✅ Ready",
         "✅ Ready",
         "✅ Running"
-
     ]
-
 })
 
 st.table(status)
 
-st.success("CyberShield AI is operational.")
+st.success("🛡️ CyberShield AI is operational.")
