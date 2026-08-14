@@ -15,20 +15,21 @@ st.set_page_config(
 
 st.title("📈 Threat Analytics")
 
-DATA_PATH = Path("data/processed/processed_dataset.parquet")
-
 # -----------------------------------------------------
-# LOAD DATA
+# DATASET SUMMARY
 # -----------------------------------------------------
 
-if not DATA_PATH.exists():
+DATASET_STATS = {
+    "benign": 428080,
+    "defacement": 95308,
+    "malware": 23645,
+    "phishing": 94086
+}
 
-    st.error("Processed dataset not found.")
-    st.stop()
-
-df = pd.read_parquet(DATA_PATH)
-
-# -----------------------------------------------------
+df = pd.DataFrame({
+    "type": list(DATASET_STATS.keys()),
+    "count": list(DATASET_STATS.values())
+})
 # KPIs
 # -----------------------------------------------------
 
