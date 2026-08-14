@@ -1,0 +1,31 @@
+Benign URLs:
+
+mp3raid.com/music/krizz_kaliko.html
+bopsecrets.org/rexroth/cr/1.htm
+http://buzzfil.net/m/show-art/ils-etaient-loin-de-s-imaginer-que-le-hibou-allait-faire-ceci-quand-ils-filmaient-2.html
+espn.go.com/nba/player/_/id/3457/brandon-rush
+yourbittorrent.com/?q=anthony-hamilton-soulife
+
+Defacement URLs:
+https://netflix.com.login.attacker.com/
+http://www.garage-pirenne.be/index.php?option=com_content&view=article&id=70&vsig70_0=15
+http://adventure-nicaragua.net/index.php?option=com_mailto&tmpl=component&link=aHR0cDovL2FkdmVudHVyZS1uaWNhcmFndWEubmV0L2luZGV4LnBocD9vcHRpb249Y29tX2NvbnRlbnQmdmlldz1hcnRpY2xlJmlkPTQ3OmFib3V0JmNhdGlkPTM2OmRlbW8tYXJ0aWNsZXMmSXRlbWlkPTU0
+http://www.pashminaonline.com/pure-pashminas
+http://www.ikenmijnkunst.nl/index.php/exposities/exposities-2006
+http://www.lebensmittel-ueberwachung.de/index.php/aktuelles.1
+
+Malware URLs:
+
+http://www.824555.com/app/member/SportOption.php?uid=guest&langx=gb
+http://9779.info/%E5%84%BF%E7%AB%A5%E7%AB%8B%E4%BD%93%E7%BA%B8%E8%B4%B4%E7%94%BB/
+http://9779.info/%E6%A0%91%E5%8F%B6%E7%B2%98%E8%B4%B4%E7%94%BB/
+http://9779.info/%E5%8F%A4%E4%BB%A3%E4%BA%8C%E5%8D%81%E5%9B%9B%E5%AD%9D%E5%B8%83%E8%B4%B4%E7%94%BB/
+http://chinacxyy.com/piccodejs-000.asp?lm2=191&x=3&y=2&w=90&h=63&open=1&n=10&tj=0
+
+Phishing URLs:
+
+br-icloud.com.br
+signin.eby.de.zukruygxctzmmqi.civpro.co.za
+http://www.marketingbyinternet.com/mo/e56508df639f6ce7d55c81ee3fcd5ba8/
+https://docs.google.com/spreadsheet/viewform?formkey=dGg2Z1lCUHlSdjllTVNRUW50TFIzSkE6MQ
+retajconsultancy.com
