@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from pathlib import Path
 
 # -----------------------------------------------------
 # PAGE CONFIG
@@ -15,195 +14,296 @@ st.set_page_config(
 
 st.title("📈 Threat Analytics")
 
+st.write(
+    "Analytics and statistics of the CyberShield AI threat detection dataset."
+)
+
 # -----------------------------------------------------
-# DATASET SUMMARY
+# DATASET STATISTICS
 # -----------------------------------------------------
 
-DATASET_STATS = {
-    "benign": 428080,
-    "defacement": 95308,
-    "malware": 23645,
-    "phishing": 94086
+TOTAL_URLS = 641119
+TOTAL_FEATURES = 43
+TOTAL_CLASSES = 4
+DATASET_SIZE = "Processed dataset"
+
+THREAT_COUNTS = {
+    "Benign": 428080,
+    "Defacement": 95308,
+    "Malware": 23645,
+    "Phishing": 94086
 }
 
-df = pd.DataFrame({
-    "type": list(DATASET_STATS.keys()),
-    "count": list(DATASET_STATS.values())
+# -----------------------------------------------------
+# DATAFRAME FOR CHARTS
+# -----------------------------------------------------
+
+threat_df = pd.DataFrame({
+    "Class": list(THREAT_COUNTS.keys()),
+    "Count": list(THREAT_COUNTS.values())
 })
-# KPIs
+
+threat_df["Percentage"] = (
+    threat_df["Count"] / TOTAL_URLS * 100
+).round(2)
+
+# -----------------------------------------------------
+# DATASET STATISTICS
 # -----------------------------------------------------
 
-st.subheader("Dataset Statistics")
+st.subheader("📊 Dataset Statistics")
 
-c1, c2, c3, c4 = st.columns(4)
+col1, col2, col3, col4 = st.columns(4)
 
-c1.metric("Total URLs", len(df))
+col1.metric(
+    "Total URLs",
+    f"{TOTAL_URLS:,}"
+)
 
-c2.metric("Features", len(df.columns)-3)
+col2.metric(
+    "Features",
+    TOTAL_FEATURES
+)
 
-c3.metric("Threat Classes", df["type"].nunique())
+col3.metric(
+    "Threat Classes",
+    TOTAL_CLASSES
+)
 
-c4.metric("Dataset Size",
-          f"{round(df.memory_usage().sum()/1024/1024,2)} MB")
+col4.metric(
+    "Dataset Size",
+    DATASET_SIZE
+)
 
 st.divider()
 
 # -----------------------------------------------------
-# CLASS DISTRIBUTION
+# THREAT DISTRIBUTION
 # -----------------------------------------------------
 
-st.subheader("Threat Distribution")
+st.subheader("🚨 Threat Distribution")
 
-col1, col2 = st.columns(2)
+c1, c2 = st.columns(2)
 
-with col1:
+with c1:
 
-    pie = px.pie(
-        df,
-        names="type",
-        title="Threat Categories"
+    fig_pie = px.pie(
+        threat_df,
+        names="Class",
+        values="Count",
+        title="URL Classification Distribution"
     )
 
     st.plotly_chart(
-        pie,
+        fig_pie,
         use_container_width=True
     )
 
-with col2:
+with c2:
 
-    bar = px.bar(
-        df["type"].value_counts().reset_index(),
-        x="type",
-        y="count",
-        color="type",
-        title="Class Counts"
+    fig_bar = px.bar(
+        threat_df,
+        x="Class",
+        y="Count",
+        text="Count",
+        title="Number of URLs by Class"
     )
 
     st.plotly_chart(
-        bar,
+        fig_bar,
         use_container_width=True
     )
 
 st.divider()
 
 # -----------------------------------------------------
-# FEATURE SELECTOR
+# CLASS TABLE
 # -----------------------------------------------------
 
-numeric_columns = [
+st.subheader("📋 Threat Class Statistics")
 
-    c for c in df.columns
+display_df = threat_df.copy()
 
-    if df[c].dtype != "object"
-
-    and c != "label"
-
-]
-
-feature = st.selectbox(
-
-    "Select Feature",
-
-    numeric_columns
-
+display_df["Count"] = display_df["Count"].map(
+    lambda x: f"{x:,}"
 )
 
-# -----------------------------------------------------
-# HISTOGRAM
-# -----------------------------------------------------
-
-st.subheader("Feature Distribution")
-
-hist = px.histogram(
-
-    df,
-
-    x=feature,
-
-    color="type",
-
-    marginal="box",
-
-    nbins=50
-
+display_df["Percentage"] = display_df[
+    "Percentage"
+].map(
+    lambda x: f"{x:.2f}%"
 )
-
-st.plotly_chart(
-
-    hist,
-
-    use_container_width=True
-
-)
-
-st.divider()
-
-# -----------------------------------------------------
-# BOXPLOT
-# -----------------------------------------------------
-
-st.subheader("Feature Comparison")
-
-box = px.box(
-
-    df,
-
-    x="type",
-
-    y=feature,
-
-    color="type"
-
-)
-
-st.plotly_chart(
-
-    box,
-
-    use_container_width=True
-
-)
-
-st.divider()
-
-# -----------------------------------------------------
-# CORRELATION
-# -----------------------------------------------------
-
-st.subheader("Correlation Matrix")
-
-corr = df[numeric_columns].corr()
-
-heatmap = px.imshow(
-
-    corr,
-
-    aspect="auto",
-
-    color_continuous_scale="Viridis"
-
-)
-
-st.plotly_chart(
-
-    heatmap,
-
-    use_container_width=True
-
-)
-
-st.divider()
-
-# -----------------------------------------------------
-# PREVIEW
-# -----------------------------------------------------
-
-st.subheader("Dataset Preview")
 
 st.dataframe(
+    display_df,
+    use_container_width=True,
+    hide_index=True
+)
 
-    df.head(100),
+st.divider()
 
+# -----------------------------------------------------
+# FEATURE INFORMATION
+# -----------------------------------------------------
+
+st.subheader("🔍 Feature Information")
+
+feature_names = [
+    "URL Length",
+    "Hostname Length",
+    "Path Length",
+    "Number of Dots",
+    "Number of Hyphens",
+    "Number of Digits",
+    "Number of Special Characters",
+    "Number of Subdomains",
+    "HTTPS",
+    "IP Address",
+    "Shortened URL",
+    "Suspicious TLD",
+    "Query Length",
+    "Fragment Length",
+    "Entropy",
+    "Digit Ratio",
+    "Letter Ratio",
+    "Special Character Ratio"
+]
+
+feature_df = pd.DataFrame({
+    "Feature": feature_names,
+    "Category": [
+        "Lexical",
+        "Lexical",
+        "Lexical",
+        "Lexical",
+        "Lexical",
+        "Lexical",
+        "Lexical",
+        "Domain",
+        "Security",
+        "Domain",
+        "Security",
+        "Domain",
+        "Lexical",
+        "Lexical",
+        "Statistical",
+        "Statistical",
+        "Statistical",
+        "Statistical"
+    ]
+})
+
+st.write(
+    f"CyberShield AI uses **{TOTAL_FEATURES} engineered URL features** "
+    "for threat classification."
+)
+
+st.dataframe(
+    feature_df,
+    use_container_width=True,
+    hide_index=True
+)
+
+st.divider()
+
+# -----------------------------------------------------
+# FEATURE DISTRIBUTION
+# -----------------------------------------------------
+
+st.subheader("📐 Feature Distribution")
+
+selected_feature = st.selectbox(
+    "Select Feature",
+    feature_df["Feature"].tolist()
+)
+
+st.info(
+    f"**{selected_feature}** is one of the engineered URL features "
+    "used by CyberShield AI during feature extraction."
+)
+
+st.divider()
+
+# -----------------------------------------------------
+# FEATURE COMPARISON
+# -----------------------------------------------------
+
+st.subheader("⚖️ Feature Comparison")
+
+comparison_df = pd.DataFrame({
+    "Class": [
+        "Benign",
+        "Defacement",
+        "Malware",
+        "Phishing"
+    ],
+    "URLs": [
+        428080,
+        95308,
+        23645,
+        94086
+    ]
+})
+
+fig_comparison = px.bar(
+    comparison_df,
+    x="Class",
+    y="URLs",
+    color="Class",
+    title="Class-wise Dataset Comparison"
+)
+
+st.plotly_chart(
+    fig_comparison,
     use_container_width=True
+)
 
+st.divider()
+
+# -----------------------------------------------------
+# CORRELATION MATRIX
+# -----------------------------------------------------
+
+st.subheader("🔗 Correlation Matrix")
+
+st.info(
+    "The full processed feature matrix is not loaded in the deployed "
+    "application. This avoids exposing the original dataset and keeps "
+    "the deployment lightweight."
+)
+
+st.warning(
+    "Correlation analysis is available during local model development "
+    "where the complete processed dataset is available."
+)
+
+st.divider()
+
+# -----------------------------------------------------
+# SUMMARY
+# -----------------------------------------------------
+
+st.subheader("📌 Analytics Summary")
+
+summary = pd.DataFrame({
+    "Metric": [
+        "Total Samples",
+        "Engineered Features",
+        "Classification Classes",
+        "Largest Class",
+        "Smallest Class"
+    ],
+    "Value": [
+        f"{TOTAL_URLS:,}",
+        TOTAL_FEATURES,
+        TOTAL_CLASSES,
+        "Benign",
+        "Malware"
+    ]
+})
+
+st.table(summary)
+
+st.success(
+    "🛡️ CyberShield AI threat analytics is operational."
 )
